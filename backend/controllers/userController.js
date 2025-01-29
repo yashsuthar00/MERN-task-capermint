@@ -72,10 +72,10 @@ const loginUser = asyncHandler(async (req, res)=> {
 
 
 //@desc current user info
-//@route POST /api/users/current
+//@route GET /api/users/profile
 //@access private
 const currentUserProfile = asyncHandler(async (req, res)=> {
-    req
+    
     res.json(req.user)
 })
 
@@ -107,4 +107,13 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = {registerUser, loginUser, currentUserProfile, updateCurrentUserProfile}
+// @desc Get all users
+// @route GET /api/users
+// @access private
+
+const getUsers = asyncHandler(async (req, res) => {
+    const users = await User.find({}, {email: 1});
+    res.status(200).json(users);
+});
+
+module.exports = {registerUser, loginUser, currentUserProfile, updateCurrentUserProfile, getUsers}
