@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
+import { useLoading } from '../context/LoadingContext';
 
 function Registration() {
+  const { setLoading } = useLoading();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -42,29 +44,31 @@ function Registration() {
     }
 
     // API integration with axios
-    axios.post('http://localhost:5000/api/users/register', formData)
+    
+    setLoading(true);
+    api.post('/register', formData)
       .then(response => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Registration Successful',
-          html: 'You have been registered successfully!<br><b></b>',
-          timer: 2000,
-          timerProgressBar: true,
-          willClose: () => {
-            clearInterval(timerInterval);
-          },
-          showConfirmButton: false
-        }).then(() => {
-          navigate('/login');
-        });
+      Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful',
+        html: 'You have been registered successfully!<br><b></b>',
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      }).then(() => {
+        navigate('/login');
+      });
       })
       .catch(error => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: error.response.data.message || 'Something went wrong!',
-        });
-      });
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: error.response.data.message || 'Something went wrong!',
+      })
+      .finally(() => {
+      setLoading(false);
+      });;
+      })
   };
 
   return (
