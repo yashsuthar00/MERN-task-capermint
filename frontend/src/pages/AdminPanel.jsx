@@ -26,7 +26,7 @@ function AdminPanel() {
         <nav>
           <ul className="space-y-2">
             <li className="hover:bg-gray-700 p-2 rounded transition-colors duration-200">
-              <a href="/admin" id="product-lists">Product Lists</a>
+              <a href="/admin/products" id="product-lists">Product Lists</a>
             </li>
             <li className="hover:bg-gray-700 p-2 rounded transition-colors duration-200">
               <a href="/admin/profile" id="profile">Profile</a>
