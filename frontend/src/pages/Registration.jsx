@@ -64,11 +64,11 @@ function Registration() {
         icon: 'error',
         title: 'Oops...',
         text: error.response.data.message || 'Something went wrong!',
+      });
       })
       .finally(() => {
-      setLoading(false);
-      });;
-      })
+        setLoading(false);
+      });
   };
 
   return (
