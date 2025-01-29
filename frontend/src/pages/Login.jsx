@@ -45,7 +45,7 @@ function Login() {
       const token = response.data.accessToken;
       localStorage.setItem("token", token);
       console.log("login successful");  
-        navigate("/admin");
+        navigate("/admin/products");
     } catch (error) {
       console.error('Error logging in:', error);  
       Swal.fire({

@@ -6,7 +6,7 @@ function NotFound() {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigate('/');
+            navigate('/admin/products');
         }, 5000);
 
         return () => clearTimeout(timer);
