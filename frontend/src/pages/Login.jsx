@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import Swal from 'sweetalert2';
-import { Link } from 'react-router-dom';
+import api from '../utils/api';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLoading } from '../context/LoadingContext';
 
 function Login() {
+  const { setLoading } = useLoading();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,23 +32,29 @@ function Login() {
     return true;
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
+    setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/users/login', formData);
-      console.log('Login successful:', response.data);
-      // Handle successful login (e.g., redirect, store token, etc.)
+      const response = await api.post('/login', formData);
+      const token = response.data.accessToken;
+      localStorage.setItem("token", token);
+      console.log("login successful");  
+        navigate("/admin");
     } catch (error) {
-      console.error('Error logging in:', error);
-      setError('Invalid email or password');
+      console.error('Error logging in:', error);  
       Swal.fire({
         icon: 'error',
         title: 'Login Error',
         text: 'Invalid email or password',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
