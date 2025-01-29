@@ -54,6 +54,8 @@ const loginUser = asyncHandler(async (req, res)=> {
             user: {
                 name: user.name,
                 email: user.email,
+                phone: user.phone,
+                password: user.password,
                 id: user.id,
             }
         }, process.env.ACCESS_TOKEN_SECRET,
@@ -69,4 +71,40 @@ const loginUser = asyncHandler(async (req, res)=> {
 })
 
 
-module.exports = {registerUser, loginUser}
+//@desc current user info
+//@route POST /api/users/current
+//@access private
+const currentUserProfile = asyncHandler(async (req, res)=> {
+    req
+    res.json(req.user)
+})
+
+//@desc Update current user profile
+//@route PUT /api/users/profile/:id
+//@access private
+const updateCurrentUserProfile = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user.id);
+
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.phone = req.body.phone || user.phone;
+        if (req.body.password) {
+            user.password = await bcrypt.hash(req.body.password, 10);
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser.id,
+            name: updatedUser.name,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+        });
+    } else {
+        res.status(404);
+        throw new Error("User not found");
+    }
+});
+
+module.exports = {registerUser, loginUser, currentUserProfile, updateCurrentUserProfile}
