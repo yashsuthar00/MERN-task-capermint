@@ -11,17 +11,19 @@ function ViewProfile() {
     name: '',
     email: '',
     password: '',
-    phone: ''
+    phone: '',
+    confirmPassword: ''
   });
   const [originalData, setOriginalData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const response = await api.get(`/profile`);
-        setFormData(response.data);
+        setFormData({ ...response.data, confirmPassword: '' });
         setOriginalData(response.data);
       } catch (error) {
         console.error('Error fetching the user data', error);
@@ -41,9 +43,21 @@ function ViewProfile() {
   };
 
   const handleSave = async () => {
-    if (JSON.stringify(formData) === JSON.stringify(originalData)) {
+    if (isEditingPassword && formData.password !== formData.confirmPassword) {
+      Swal.fire('Error', 'Passwords do not match', 'error');
+      return;
+    }
+
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      Swal.fire('Error', 'Please enter a valid 10-digit phone number', 'error');
+      return;
+    }
+
+    if (JSON.stringify(formData) === JSON.stringify({ ...originalData, confirmPassword: '' })) {
       Swal.fire('Info', 'No changes made to the profile', 'info');
       setIsEditing(false);
+      setIsEditingPassword(false);
       return;
     }
     
@@ -53,6 +67,7 @@ function ViewProfile() {
       Swal.fire('Success', 'Profile updated successfully', 'success');
       setOriginalData(formData);
       setIsEditing(false);
+      setIsEditingPassword(false);
     } catch (error) {
         console.error('Error updating the user data', error);
         if (error.response && error.response.data && error.response.data.message === 'Email already exists') {
@@ -108,7 +123,10 @@ function ViewProfile() {
               type="password" 
               name="password" 
               value={formData.password} 
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                setIsEditingPassword(true);
+              }}
               placeholder="Password" 
               autoComplete="new-password"
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -117,6 +135,20 @@ function ViewProfile() {
             <p className="w-full px-3 py-2 border rounded-lg bg-gray-100">********</p>
           )}
         </div>
+        {isEditing && isEditingPassword && (
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+            <input 
+              type="password" 
+              name="confirmPassword" 
+              value={formData.confirmPassword} 
+              onChange={handleChange}
+              placeholder="Confirm Password" 
+              autoComplete="new-password"
+              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        )}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Phone number</label>
           {isEditing ? (
@@ -158,4 +190,3 @@ function ViewProfile() {
 }
 
 export default ViewProfile;
-

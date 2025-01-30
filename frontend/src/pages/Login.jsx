@@ -82,6 +82,7 @@ function Login() {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            autoComplete='password'
             placeholder="Password"
             required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

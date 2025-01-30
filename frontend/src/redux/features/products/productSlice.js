@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import products from '../../../products.json';
-
+import products from '../products.json'
 const initialState = {
   products: products,
 };
@@ -31,9 +30,12 @@ const productSlice = createSlice({
       if (product && product.count > 0) {
         product.count -= 1;
       }
+    },
+    deleteProduct: (state, action) => {
+      state.products = state.products.filter(product => product.id !== action.payload);
     }
   }
 });
 
-export const { addProduct, updateProduct, incrementCount, decrementCount } = productSlice.actions;
+export const { addProduct, updateProduct, incrementCount, decrementCount, deleteProduct } = productSlice.actions;
 export default productSlice.reducer;

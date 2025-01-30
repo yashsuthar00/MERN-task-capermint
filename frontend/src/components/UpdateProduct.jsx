@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateProduct } from '../redux/features/products/productSlice';
 
-const UpdateProduct = ({ product }) => {
+const UpdateProduct = ({ product, hideUpdate }) => {
   const [name, setName] = useState(product.name);
   const [count, setCount] = useState(product.count);
   const dispatch = useDispatch();
@@ -10,6 +10,7 @@ const UpdateProduct = ({ product }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(updateProduct({ id: product.id, name, count: parseInt(count, 10) }));
+    hideUpdate(null);
   };
 
   return (

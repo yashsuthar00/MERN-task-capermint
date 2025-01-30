@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { incrementCount, decrementCount } from '../redux/features/products/productSlice';
+import { incrementCount, decrementCount, deleteProduct } from '../redux/features/products/productSlice';
 import AddProduct from './AddProduct';
 import UpdateProduct from './UpdateProduct';
 
@@ -13,7 +13,7 @@ const ProductList = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Product List</h1>
       <AddProduct />
-      {selectedProduct && <UpdateProduct product={selectedProduct} />}
+      {selectedProduct && <UpdateProduct product={selectedProduct} hideUpdate={setSelectedProduct} />}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {products.map(product => (
           <div key={product.id} className="border p-4 rounded shadow">
@@ -37,6 +37,12 @@ const ProductList = () => {
                 onClick={() => setSelectedProduct(product)}
               >
                 Edit
+              </button>
+              <button
+                className="bg-gray-500 text-white px-2 py-1 rounded"
+                onClick={() => dispatch(deleteProduct(product.id))}
+              >
+                Delete
               </button>
             </div>
           </div>

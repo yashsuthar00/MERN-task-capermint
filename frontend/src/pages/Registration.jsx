@@ -43,6 +43,16 @@ function Registration() {
       return;
     }
 
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Please enter a valid 10-digit phone number!',
+      });
+      return;
+    }
+
     // API integration with axios
     
     setLoading(true);
@@ -106,6 +116,7 @@ function Registration() {
             name="password"
             value={formData.password}
             onChange={handleChange}
+            autoComplete='password'
             placeholder="Password"
             required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -118,6 +129,7 @@ function Registration() {
             name="confirmPassword"
             value={formData.confirmPassword}
             onChange={handleChange}
+            autoComplete='conform-password'
             placeholder="Confirm Password"
             required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
